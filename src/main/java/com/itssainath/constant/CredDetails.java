@@ -1,19 +1,22 @@
 package com.itssainath.constant;
 
+import java.math.BigInteger;
+
 public abstract class CredDetails {
 
-    public static final String NODE_RPC_URL = "http://127.0.0.1:7545";
+    // Change all credentials according to your local setup
+    public static final String NODE_RPC_URL = "http://127.0.0.1:7545/";
 
-    public static final String ACCOUNT1_PUBLIC_KEY = "0x9FF153f7574441991a3aD8fA21107861a2aaffa7";
+    public static final String ACCOUNT1_PUBLIC_KEY = "0x1D2121f2dd500E2624e561d8b27421Dd05425f0c";
     public static final String ACCOUNT1_PRIVATE_KEY
-            = "0x5382507c78779d01b5bb50f4062f89477b1cac5ba5ba69c79f1083fe79f226a7";
+            = "0x4efa8fa05dd408661d83f705c7730a31b9092042a083649a7235c26395af6a1f";
 
-    public static final String ACCOUNT2_PUBLIC_KEY = "0x50c5cebD3b1e559A9Ba5bc348e74FE39F7c9e7a6";
+    public static final String ACCOUNT2_PUBLIC_KEY = "0xb04Bb27A33BADE894D93BC83B641d9182Be15c2d";
     public static final String ACCOUNT2_PRIVATE_KEY
-            = "0x82be645ee4061abdbb2a0e4c1a25476f140e650d815b8f0c1853ceca28c8451f";
+            = "0x53cf33d1bbdada9db33ee6d373bf10360965d6c3896e84cd83b4a2a5cbc2b0f7";
 
-    public static final String GAS_PRICE = "20000000000";
-    public static final String GAS_LIMIT = "6721975";
+    public static final BigInteger GAS_PRICE = BigInteger.valueOf(20000000000l);
+    public static final BigInteger GAS_LIMIT = BigInteger.valueOf(6721975);
 
 
 }

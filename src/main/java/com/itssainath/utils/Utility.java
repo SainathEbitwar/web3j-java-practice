@@ -1,20 +1,16 @@
 package com.itssainath.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itssainath.constant.CredDetails;
-import org.bouncycastle.util.test.FixedSecureRandom;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.WalletUtils;
+import org.web3j.crypto.RawTransaction;
+import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.Request;
-import org.web3j.protocol.core.methods.response.EthTransaction;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.core.methods.response.Web3ClientVersion;
-import org.web3j.protocol.exceptions.TransactionException;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.*;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Transfer;
-import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
+import org.web3j.utils.Numeric;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -58,8 +54,10 @@ public class Utility {
     public static void sendingEther() throws Exception {
 
         Web3j web3j = Web3j.build(new HttpService(NODE_RPC_URL));
+        Credentials credentials = Credentials.create(ACCOUNT1_PRIVATE_KEY);
+
         TransactionReceipt transactionReceipt = Transfer.sendFunds(web3j,
-                Credentials.create(ACCOUNT1_PRIVATE_KEY),
+                credentials,
                 ACCOUNT2_PUBLIC_KEY,
                 BigDecimal.valueOf(1.0),
                 Unit.ETHER).send();
@@ -70,33 +68,25 @@ public class Utility {
         System.out.println("Eth_Transaction : " + MAPPER.writeValueAsString(ethTransaction));
         System.out.println("TransactionReceipt : " + MAPPER.writeValueAsString(transactionReceipt));
     }
+
+    public static void sendingEtherWithCustomRawTransaction() throws Exception {
+
+        Web3j web3j = Web3j.build(new HttpService(NODE_RPC_URL));
+        Credentials credentials = Credentials.create(ACCOUNT1_PRIVATE_KEY);
+        EthGetTransactionCount transactionCount =
+                web3j.ethGetTransactionCount(ACCOUNT1_PUBLIC_KEY, DefaultBlockParameterName.LATEST).send();
+        BigInteger nonce = transactionCount.getTransactionCount();
+        RawTransaction rawTransaction =
+                RawTransaction.createEtherTransaction(nonce,
+                        GAS_PRICE, GAS_LIMIT, ACCOUNT2_PUBLIC_KEY, BigInteger.valueOf(1000000000000000000l));
+        byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+        String hexValue = Numeric.toHexString(signedMessage);
+        EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send();
+        EthTransaction ethTransaction = web3j.ethGetTransactionByHash(ethSendTransaction.getTransactionHash()).send();
+
+        System.out.println("Eth_Transaction : " + MAPPER.writeValueAsString(ethTransaction));
+        System.out.println("EthSendTransaction : " + MAPPER.writeValueAsString(ethSendTransaction));
+    }
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
