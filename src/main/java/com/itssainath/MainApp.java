@@ -11,7 +11,7 @@ public class MainApp {
 
         Utility utility = new Utility();
 
-        String response = utility.sendingSynchronousRequest();
+        String response = utility.sendingAsynchronousRequest();
 
         System.out.println(response);
 
