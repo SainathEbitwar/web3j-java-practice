@@ -8,12 +8,6 @@ import java.io.IOException;
 public class MainApp {
 
     public static void main( String[] args ) throws IOException {
-
-        Utility utility = new Utility();
-
-        String response = utility.sendingAsynchronousRequest();
-
-        System.out.println(response);
-
+        Utility.sendingReactiveRequest();
     }
 }
