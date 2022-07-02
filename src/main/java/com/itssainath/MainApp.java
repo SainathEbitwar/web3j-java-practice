@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class MainApp {
 
-    public static void main( String[] args ) throws IOException {
-        Utility.sendingReactiveRequest();
+    public static void main( String[] args ) throws Exception {
+        Utility.sendingEther();
     }
 }
