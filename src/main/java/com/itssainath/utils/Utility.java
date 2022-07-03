@@ -10,7 +10,6 @@ import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.*;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Transfer;
-import org.web3j.tx.gas.DefaultGasProvider;
 import org.web3j.tx.gas.StaticGasProvider;
 import org.web3j.utils.Convert.Unit;
 import org.web3j.utils.Numeric;
@@ -102,6 +101,19 @@ public class Utility {
         helloWorld.getTransactionReceipt().ifPresentOrElse(
                 transactionReceipt -> System.out.println("TransactionReceipt : " + transactionReceipt),
                 () -> System.out.println("Invalid Transaction"));
+
+        String contractCallResponse = helloWorld.greet().send();
+
+        System.out.println("Contract Call Response : " + contractCallResponse);
+    }
+
+    public static void loadExistingSmartContract() throws Exception {
+
+        Web3j web3j = Web3j.build(new HttpService(NODE_RPC_URL));
+
+        HelloWorld helloWorld =
+                HelloWorld.load(HELLO_WORLD_CONTRACT_ADDRESS, web3j, Credentials.create(ACCOUNT1_PRIVATE_KEY),
+                        new StaticGasProvider(GAS_PRICE, GAS_LIMIT));
 
         String contractCallResponse = helloWorld.greet().send();
 
