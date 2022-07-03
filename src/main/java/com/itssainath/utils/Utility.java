@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
+import org.web3j.model.HelloWorld;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.*;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Transfer;
+import org.web3j.tx.gas.DefaultGasProvider;
+import org.web3j.tx.gas.StaticGasProvider;
 import org.web3j.utils.Convert.Unit;
 import org.web3j.utils.Numeric;
 
@@ -86,6 +89,23 @@ public class Utility {
 
         System.out.println("Eth_Transaction : " + MAPPER.writeValueAsString(ethTransaction));
         System.out.println("EthSendTransaction : " + MAPPER.writeValueAsString(ethSendTransaction));
+    }
+
+    public static void deployAndCallSmartContract() throws Exception {
+
+        Web3j web3j = Web3j.build(new HttpService(NODE_RPC_URL));
+
+        HelloWorld helloWorld =
+                HelloWorld.deploy(web3j, Credentials.create(ACCOUNT1_PRIVATE_KEY),
+                        new StaticGasProvider(GAS_PRICE, GAS_LIMIT)).send();
+
+        helloWorld.getTransactionReceipt().ifPresentOrElse(
+                transactionReceipt -> System.out.println("TransactionReceipt : " + transactionReceipt),
+                () -> System.out.println("Invalid Transaction"));
+
+        String contractCallResponse = helloWorld.greet().send();
+
+        System.out.println("Contract Call Response : " + contractCallResponse);
     }
 
 
